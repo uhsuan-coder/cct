@@ -90,7 +90,7 @@ nav b{font-family:"Noto Serif TC",serif;font-size:17px;white-space:nowrap;margin
 .gate{min-height:calc(100vh - 130px);display:grid;place-items:center;background:var(--curtain)}
 .gbox{width:min(380px,100%);background:#ffffff10;border:1px solid #ffffff26;border-radius:20px;padding:28px;color:#f6e9e3;text-align:center}
 .gbox p{color:#dcc4bd;margin:8px 0 16px}
-.gbox input{width:100%;font:16px inherit;min-height:48px;padding:0 14px;border-radius:12px;border:1px solid #ffffff40;background:#00000030;color:#fff;text-align:center;letter-spacing:.15em}
+.gbox input{width:100%;font-family:inherit;font-size:16px;min-height:48px;padding:0 14px;border-radius:12px;border:1px solid #ffffff40;background:#00000030;color:#fff;text-align:center;letter-spacing:.15em}
 .gbox input:focus-visible{outline:3px solid var(--gold);outline-offset:1px}
 .gbox .btn{width:100%;margin-top:12px}
 .gmsg{min-height:1.5em;color:var(--gold)!important;margin:10px 0 4px!important}
@@ -426,7 +426,7 @@ if(CONFIG.sheetCsvUrl){fetch(CONFIG.sheetCsvUrl).then(r=>r.ok?r.text():"").then(
 
 const PW_HASH="694893afea89176524c9a83d00d9bd1f753cce8a09c304fc6dd76d81c5ed835e"; /* 群組密碼的 SHA-256 雜湊；改密碼時換掉這串 */
 async function sha(t){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(t));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}
-function unlock(){$("#gate").hidden=true;$("#gate").style.display="none";$("#inner").hidden=false}
+function unlock(){try{document.activeElement&&document.activeElement.blur()}catch(e){}$("#gate").hidden=true;$("#gate").style.display="none";$("#inner").hidden=false}
 try{if(sessionStorage.getItem("cct-ok")==PW_HASH)unlock()}catch(e){}
 $("#gform").addEventListener("submit",async ev=>{ev.preventDefault();
  let ok=false;try{ok=await sha($("#gpw").value.trim())==PW_HASH}catch(e){}
