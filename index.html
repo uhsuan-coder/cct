@@ -63,7 +63,7 @@ nav b{font-family:"Noto Serif TC",serif;font-size:17px;white-space:nowrap;margin
 .member .avatar{width:52px;flex:none;font-size:20px}
 .member b{display:block}.member span{font-size:13px;color:var(--soft)}
 
-.stagger{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px clamp(14px,3vw,28px);margin:18px auto 0;max-width:600px;padding-bottom:48px}
+.stagger{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px clamp(14px,3vw,28px);margin:18px auto 0;max-width:1180px;padding-bottom:48px}
 .stagger .member{display:block;padding:0;border-radius:6px;overflow:hidden;background:var(--card);box-shadow:0 6px 18px #2d070714}
 .stagger .member:nth-child(even){transform:translateY(48px)}
 .stagger .member .avatar{width:100%;border-radius:0;aspect-ratio:1;font-size:40px;background:#8a7a7a}
@@ -71,6 +71,9 @@ nav b{font-family:"Noto Serif TC",serif;font-size:17px;white-space:nowrap;margin
 .stagger .member b{display:block;font-size:19px;line-height:1.25;font-family:"Noto Serif TC",serif}
 .stagger .member .sch{display:block;font-size:14px;font-weight:500;color:var(--ink);opacity:.85;margin-top:2px;line-height:1.4}
 .stagger .member .role{display:block;font-size:13px;line-height:1.45;color:var(--soft)}
+@media(min-width:700px){.stagger{grid-template-columns:repeat(3,minmax(0,1fr))}.stagger .member:nth-child(even){transform:none}.stagger .member:nth-child(3n+2){transform:translateY(48px)}}
+@media(min-width:1000px){.stagger{grid-template-columns:repeat(4,minmax(0,1fr))}.stagger .member:nth-child(3n+2){transform:none}.stagger .member:nth-child(4n+2),.stagger .member:nth-child(4n){transform:translateY(48px)}}
+@media(min-width:1280px){.stagger{grid-template-columns:repeat(5,minmax(0,1fr))}.stagger .member:nth-child(4n+2),.stagger .member:nth-child(4n){transform:none}.stagger .member:nth-child(5n+2),.stagger .member:nth-child(5n+4){transform:translateY(48px)}}
 @media(max-width:420px){.stagger .member b{font-size:17px}.stagger .member .info{padding:8px 10px 12px}.stagger .member:nth-child(even){transform:translateY(36px)}}
 .friends{margin-top:16px;font-size:15px;color:var(--soft)}
 /* upcoming */
@@ -400,7 +403,7 @@ function driveImg(u){const m=u.match(/(?:\/d\/|[?&]id=)([\w-]{20,})/);return m?`
 let PICS=GALLERY.slice();
 function drawGal(){const g=$("#gal");if(!PICS.length){g.innerHTML=`<div class="empty" style="flex:1">花絮照片整理中。</div>`;return}
  g.innerHTML=shuffle(PICS).map(p=>{const r=(Math.random()*14-7).toFixed(1),y=(Math.random()*24-12).toFixed(0),x=(Math.random()*16-8).toFixed(0),t=(Math.random()*16-8).toFixed(0),s=(0.82+Math.random()*0.3).toFixed(2);
-  return`<figure class="pol" tabindex="0" style="--r:${r}deg;--y:${y}px;--x:${x}px;--t:${t}deg;--s:${s}"><img src="${esc(p.src)}" alt="${esc(p.cap||"活動花絮")}" loading="lazy" onerror="this.closest('figure').remove()">${p.cap?`<figcaption>${esc(p.cap)}</figcaption>`:""}</figure>`}).join("")}
+  return`<figure class="pol" tabindex="0" style="--r:${r}deg;--y:${y}px;--x:${x}px;--t:${t}deg;--s:${s}"><img src="${esc(p.src)}" alt="${esc(p.cap||"活動花絮")}" loading="lazy" onerror="this.closest('figure').remove()" onload="if(this.naturalWidth<240||this.naturalHeight<160)this.closest('figure').remove()">${p.cap?`<figcaption>${esc(p.cap)}</figcaption>`:""}</figure>`}).join("")}
 drawGal();
 if(CONFIG.gallerySheet){fetch(CONFIG.gallerySheet).then(r=>r.text()).then(t=>{const rows=t.split(/\r?\n/).map(l=>(l.match(/"((?:[^"]|"")*)"|[^,]+|(?<=,)(?=,|$)/g)||[]).map(c=>c.replace(/^"|"$/g,"").replace(/""/g,'"')));
   const hd=rows.shift()||[],iu=hd.findIndex(x=>/照片|上傳|photo/i.test(x)),ic=hd.findIndex(x=>/說明|活動|caption/i.test(x));if(iu<0)return;
