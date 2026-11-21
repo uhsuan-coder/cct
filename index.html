@@ -120,13 +120,14 @@ nav b{font-family:"Noto Serif TC",serif;font-size:17px;white-space:nowrap;margin
 .pr h4{margin:0;font-size:17px;font-weight:700;line-height:1.4}.pr p{margin:2px 0 0;font-size:14px;color:#cdb3ac}
 .pr .k{display:inline-block;font-size:12px;padding:0 8px;border-radius:99px;margin-right:6px;vertical-align:2px;background:#e8b93133;color:var(--gold)}
 .pr .k.w{background:#3fb3aa33;color:#7fd6cf}
-.gal{display:flex;flex-wrap:wrap;justify-content:center;gap:clamp(10px,2.4vw,22px) clamp(8px,2vw,18px);margin-top:26px;padding:10px 0 30px}
-.pol{margin:0;width:clamp(138px,27vw,210px);background:#fbf8f2;padding:8px 8px 30px;border-radius:2px;box-shadow:0 2px 3px #0002,0 10px 22px #2c040426;transform:rotate(var(--r)) translateY(var(--y));transition:transform .2s,box-shadow .2s;cursor:zoom-in;position:relative}
+.gal{display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-start;gap:clamp(4px,1.6vw,18px) clamp(2px,1.2vw,14px);margin-top:26px;padding:14px 0 40px}
+.pol{margin:0;width:calc(clamp(96px,29vw,200px)*var(--s,1));background:#fbf8f2;padding:6px 6px 24px;border-radius:2px;box-shadow:0 2px 3px #0002,0 10px 22px #2c040426;transform:rotate(var(--r)) translate(var(--x),var(--y));transition:transform .2s,box-shadow .2s;cursor:zoom-in;position:relative}
 .pol:hover,.pol:focus-visible{transform:rotate(0) scale(1.06);z-index:2;box-shadow:0 14px 30px #2c040440;outline:none}
 .pol img{width:100%;aspect-ratio:1;object-fit:cover;display:block;background:#ddd}
 .pol figcaption{position:absolute;left:8px;right:8px;bottom:6px;font-size:13px;color:#5a4040;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pol::before{content:"";position:absolute;top:-9px;left:50%;width:54px;height:18px;margin-left:-27px;background:#e8b93166;transform:rotate(var(--t))}
 .lb{position:fixed;inset:0;z-index:50;background:#000e;display:grid;place-items:center;padding:16px;cursor:zoom-out}.lb[hidden]{display:none}
+.lbx{position:fixed;top:max(14px,env(safe-area-inset-top));left:14px;z-index:51;font:inherit;font-weight:700;font-size:16px;min-height:46px;padding:0 18px;border-radius:99px;border:0;background:#fbf8f2;color:#2c0404;cursor:pointer;box-shadow:0 4px 14px #0006}
 .lb figure{margin:0;max-width:100%;max-height:100%;text-align:center}.lb img{max-width:100%;max-height:82vh;border-radius:4px;display:block;margin:auto}
 .lb figcaption{color:#eee;margin-top:10px;font-size:15px}
 @media(max-width:760px){.two{grid-template-columns:1fr}}
@@ -283,16 +284,16 @@ footer{background:#140404;color:#bfa7a0;font-size:14px;text-align:center;padding
 </div>
 </main>
 
-<div class="lb" id="lb" hidden><figure><img id="lbi" alt=""><figcaption id="lbc"></figcaption></figure></div>
+<div class="lb" id="lb" hidden><button class="lbx" id="lbx" type="button">← 回到照片牆</button><figure><img id="lbi" alt=""><figcaption id="lbc"></figcaption></figure></div>
 <footer>酷凌計畫 in 桃園 · Cooling Conflict 教師社群</footer>
 
 <script>
 {
 /* ====== 設定：把 Google 試算表「發布到網路 → CSV」的網址貼在這裡 ====== */
 const CONFIG={
- sheetCsvUrl:"https://docs.google.com/spreadsheets/d/1apC_V8rMxbZCTvcwu3eiSOVmKoFNxrmhXu80y4FqY0Q/gviz/tq?tqx=out:csv",
+ sheetCsvUrl:"https://docs.google.com/spreadsheets/d/1apC_V8rMxbZCTvcwu3eiSOVmKoFNxrmhXu80y4FqY0Q/gviz/tq?tqx=out:csv&headers=1&sheet=%E9%85%B7%E5%87%8C%E6%B4%BB%E5%8B%95%E8%A9%A6%E7%AE%97%E8%A1%A8",
  /* 花絮：同一張試算表裡名為「花絮」的工作表，欄位「照片連結」「說明」 */
- gallerySheet:"https://docs.google.com/spreadsheets/d/1apC_V8rMxbZCTvcwu3eiSOVmKoFNxrmhXu80y4FqY0Q/gviz/tq?tqx=out:csv&sheet=%E8%8A%B1%E7%B5%AE",
+ gallerySheet:"https://docs.google.com/spreadsheets/d/1apC_V8rMxbZCTvcwu3eiSOVmKoFNxrmhXu80y4FqY0Q/gviz/tq?tqx=out:csv&headers=1&sheet=%E8%8A%B1%E7%B5%AE",
  links:[
   {t:"Padlet 資源庫",d:"劇本、教案",u:"https://padlet.com/pymhstyc/sel-h4om8g0m07oba13l",c:"#c8382e"},
   {t:"活動試算表",d:"新增活動，網站自動更新",u:"https://docs.google.com/spreadsheets/d/1apC_V8rMxbZCTvcwu3eiSOVmKoFNxrmhXu80y4FqY0Q/edit",c:"#1f8a4c"}
@@ -343,6 +344,7 @@ const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&g
 function toDate(s){const n=(s.match(/\d+/g)||[]).map(Number);if(n.length<3)return new Date(NaN);
  return n[0]>31?new Date(n[0],n[1]-1,n[2]):new Date(n[2],n[0]-1,n[1])}
 function parseCSV(text){
+ text=text.replace(/^\uFEFF/,"");
  const sep=text.split("\n")[0].includes("\t")?"\t":",";
  const rows=[];let row=[],f="",q=false;
  for(let i=0;i<text.length;i++){const ch=text[i];
@@ -351,8 +353,10 @@ function parseCSV(text){
   else if(ch=="\n"||ch=="\r"){if(ch=="\r"&&text[i+1]=="\n")i++;row.push(f);rows.push(row);row=[];f=""}
   else f+=ch}
  if(f||row.length){row.push(f);rows.push(row)}
- const head=rows.shift().map(h=>h.trim());
- const k=n=>head.indexOf(n);
+ const COLS=["日期","活動名稱","類型","地點","簡介","照片連結","對外公開","成果連結"];
+ let head=(rows[0]||[]).map(h=>h.replace(/\s/g,""));
+ if(head.some(x=>x.startsWith("日期")))rows.shift();else head=COLS;
+ const k=n=>{const i=head.findIndex(h=>h.startsWith(n));return i<0?COLS.indexOf(n):i};
  return rows.filter(r=>r.some(x=>x.trim())).map(r=>{const g=n=>(r[k(n)]||"").trim();
   const d=toDate(g("日期"));
   return{date:d,name:g("活動名稱"),type:g("類型")||"共備",place:g("地點"),desc:g("簡介"),
@@ -395,21 +399,21 @@ function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor
 function driveImg(u){const m=u.match(/(?:\/d\/|[?&]id=)([\w-]{20,})/);return m?`https://drive.google.com/thumbnail?id=${m[1]}&sz=w1600`:u}
 let PICS=GALLERY.slice();
 function drawGal(){const g=$("#gal");if(!PICS.length){g.innerHTML=`<div class="empty" style="flex:1">花絮照片整理中。</div>`;return}
- g.innerHTML=shuffle(PICS).map(p=>{const r=(Math.random()*10-5).toFixed(1),y=(Math.random()*14-7).toFixed(0),t=(Math.random()*16-8).toFixed(0);
-  return`<figure class="pol" tabindex="0" style="--r:${r}deg;--y:${y}px;--t:${t}deg"><img src="${esc(p.src)}" alt="${esc(p.cap||"活動花絮")}" loading="lazy" onerror="this.closest('figure').remove()">${p.cap?`<figcaption>${esc(p.cap)}</figcaption>`:""}</figure>`}).join("")}
+ g.innerHTML=shuffle(PICS).map(p=>{const r=(Math.random()*14-7).toFixed(1),y=(Math.random()*24-12).toFixed(0),x=(Math.random()*16-8).toFixed(0),t=(Math.random()*16-8).toFixed(0),s=(0.82+Math.random()*0.3).toFixed(2);
+  return`<figure class="pol" tabindex="0" style="--r:${r}deg;--y:${y}px;--x:${x}px;--t:${t}deg;--s:${s}"><img src="${esc(p.src)}" alt="${esc(p.cap||"活動花絮")}" loading="lazy" onerror="this.closest('figure').remove()">${p.cap?`<figcaption>${esc(p.cap)}</figcaption>`:""}</figure>`}).join("")}
 drawGal();
 if(CONFIG.gallerySheet){fetch(CONFIG.gallerySheet).then(r=>r.text()).then(t=>{const rows=t.split(/\r?\n/).map(l=>(l.match(/"((?:[^"]|"")*)"|[^,]+|(?<=,)(?=,|$)/g)||[]).map(c=>c.replace(/^"|"$/g,"").replace(/""/g,'"')));
   const hd=rows.shift()||[],iu=hd.findIndex(x=>/照片|上傳|photo/i.test(x)),ic=hd.findIndex(x=>/說明|活動|caption/i.test(x));if(iu<0)return;
-  const add=[];rows.forEach(r=>(r[iu]||"").split(/[\s,]+/).filter(u=>/^https?:/.test(u)).forEach(u=>add.push({src:driveImg(u),cap:ic>=0?r[ic]||"":""})));
+  const add=[];rows.forEach(r=>(r[iu]||"").split(/[\s,]+/).filter(u=>/^https?:/.test(u)).forEach(u=>add.push({src:driveImg(u),cap:""})));
   if(add.length){PICS=GALLERY.concat(add);drawGal()}}).catch(()=>{})}
 
-function load(text){EVENTS=parseCSV(text);filter="全部";render()}
+function load(text,keep){const ev=parseCSV(text);if(keep&&!ev.length)return;EVENTS=ev;filter="全部";render()}
 load(BUILTIN);
-if(CONFIG.sheetCsvUrl){fetch(CONFIG.sheetCsvUrl).then(r=>r.text()).then(load).catch(()=>{})}
+if(CONFIG.sheetCsvUrl){fetch(CONFIG.sheetCsvUrl).then(r=>r.ok?r.text():"").then(t=>load(t,true)).catch(()=>{})}
 
 
 
-const PW_HASH="2d1903875669df5108b6fdab8a178ea35fa5eb7ff103c06083a0f16f29aa2109"; /* 群組密碼的 SHA-256 雜湊；改密碼時換掉這串 */
+const PW_HASH="694893afea89176524c9a83d00d9bd1f753cce8a09c304fc6dd76d81c5ed835e"; /* 群組密碼的 SHA-256 雜湊；改密碼時換掉這串 */
 async function sha(t){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(t));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}
 function unlock(){$("#gate").hidden=true;$("#gate").style.display="none";$("#inner").hidden=false}
 try{if(sessionStorage.getItem("cct-ok")==PW_HASH)unlock()}catch(e){}
