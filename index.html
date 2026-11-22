@@ -399,7 +399,7 @@ function render(){
  $("#heroNext").innerHTML=n?`<span><small>下一場活動</small>${fmt(n.date)}　${esc(n.name)}</span>`:`<span><small>社群歷程</small>已走過 ${past.length} 場活動</span>`;
  const co=past.filter(e=>["共備","會議"].includes(e.type)), pr=past.filter(e=>["實踐","工作坊"].includes(e.type));
  const start=past.find(e=>e.type=="啟動");
- $("#jSum").textContent=`${start?`自 ${fmt(start.date)} 社群啟動以來，`:""}已共備 ${co.length} 次、實踐與工作坊 ${pr.length} 場。活動日期一過就會自動加進來。`;
+ $("#jSum").textContent=`${start?`自 ${fmt(start.date)} 社群啟動以來，`:""}已共備 ${co.length} 次、實踐與工作坊 ${pr.length} 場。持續累積中…`;
  const yrs=[...new Set(co.map(e=>e.date.getFullYear()))].reverse();
  $("#coList").innerHTML=yrs.map(y=>`<div class="yr"><b>${y}</b><div class="dates">${co.filter(e=>e.date.getFullYear()==y).reverse().map(e=>`<span>${e.date.getMonth()+1}/${e.date.getDate()}${e.type=="會議"?" 線上":""}</span>`).join("")}</div></div>`).join("")||`<p class="sub">尚無紀錄</p>`;
  $("#prList").innerHTML=pr.slice().reverse().map(e=>`<div class="pr"><time>${fmt(e.date)}</time><div><h4>${e.type=="工作坊"?'<span class="k w">工作坊</span>':""}${esc(e.name)}</h4>${e.place?`<p>${esc(e.place)}</p>`:""}${e.link?`<a class="more" href="${esc(e.link)}" target="_blank" rel="noopener">看成果 →</a>`:""}</div></div>`).join("")||`<p class="sub">尚無紀錄</p>`;
