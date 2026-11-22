@@ -302,6 +302,8 @@ footer{background:#140404;color:#bfa7a0;font-size:14px;text-align:center;padding
 const CONFIG={
  sheetCsvUrl:"https://docs.google.com/spreadsheets/d/1apC_V8rMxbZCTvcwu3eiSOVmKoFNxrmhXu80y4FqY0Q/gviz/tq?tqx=out:csv&headers=1&sheet=%E9%85%B7%E5%87%8C%E6%B4%BB%E5%8B%95%E8%A9%A6%E7%AE%97%E8%A1%A8",
  /* 花絮：同一張試算表裡名為「花絮」的工作表，欄位「照片連結」「說明」 */
+ /* 花絮資料夾：Apps Script 網頁應用程式的網址（直接讀雲端資料夾） */
+ galleryApi:"https://script.google.com/macros/s/AKfycbyaBe4eujFubLbIUekea9N5dhW_wwdAvDciCvNDVkIVRsciErQKiQU37_vpuY4QR0yD/exec",
  gallerySheet:"https://docs.google.com/spreadsheets/d/1apC_V8rMxbZCTvcwu3eiSOVmKoFNxrmhXu80y4FqY0Q/gviz/tq?tqx=out:csv&headers=1&sheet=%E8%8A%B1%E7%B5%AE",
  links:[
   {t:"Padlet 資源庫",d:"劇本、教案、排練影片",u:"https://padlet.com/pymhstyc/sel-h4om8g0m07oba13l",c:"#c8382e"}
@@ -413,10 +415,12 @@ function drawGal(){const g=$("#gal");if(!PICS.length){g.innerHTML=`<div class="e
  g.innerHTML=shuffle(PICS).map(p=>{const r=(Math.random()*14-7).toFixed(1),y=(Math.random()*24-12).toFixed(0),x=(Math.random()*16-8).toFixed(0),t=(Math.random()*16-8).toFixed(0),s=(0.82+Math.random()*0.3).toFixed(2);
   return`<figure class="pol" tabindex="0" style="--r:${r}deg;--y:${y}px;--x:${x}px;--t:${t}deg;--s:${s}"><img src="${esc(p.src)}" alt="${esc(p.cap||"活動花絮")}" loading="lazy" onerror="this.closest('figure').remove()" onload="if(this.naturalWidth<240||this.naturalHeight<160)this.closest('figure').remove()">${p.cap?`<figcaption>${esc(p.cap)}</figcaption>`:""}</figure>`}).join("")}
 drawGal();
+const EXTRA=new Map();
+function addPics(list){let n=0;list.forEach(p=>{const k=(p.src.match(/id=([\w-]+)/)||[,p.src])[1];if(!EXTRA.has(k)){EXTRA.set(k,p);n++}});if(n){PICS=GALLERY.concat([...EXTRA.values()]);drawGal()}}
+if(CONFIG.galleryApi){fetch(CONFIG.galleryApi).then(r=>r.json()).then(a=>addPics((a||[]).map(x=>({src:`https://drive.google.com/thumbnail?id=${x.id}&sz=w1600`,cap:""})))).catch(()=>{})}
 if(CONFIG.gallerySheet){fetch(CONFIG.gallerySheet).then(r=>r.text()).then(t=>{const rows=t.split(/\r?\n/).map(l=>(l.match(/"((?:[^"]|"")*)"|[^,]+|(?<=,)(?=,|$)/g)||[]).map(c=>c.replace(/^"|"$/g,"").replace(/""/g,'"')));
-  const hd=rows.shift()||[],iu=hd.findIndex(x=>/照片|上傳|photo/i.test(x)),ic=hd.findIndex(x=>/說明|活動|caption/i.test(x));if(iu<0)return;
-  const add=[];rows.forEach(r=>(r[iu]||"").split(/[\s,]+/).filter(u=>/^https?:/.test(u)).forEach(u=>add.push({src:driveImg(u),cap:""})));
-  if(add.length){PICS=GALLERY.concat(add);drawGal()}}).catch(()=>{})}
+  const add=[],seen=new Set();rows.flat().join(" ").split(/[\s,]+/).filter(u=>/^https?:\/\//.test(u)&&/drive\.google|googleusercontent|\.(jpe?g|png|webp|gif)(\?|$)/i.test(u)).forEach(u=>{const s=driveImg(u);if(!seen.has(s)){seen.add(s);add.push({src:s,cap:""})}});
+  addPics(add)}).catch(()=>{})}
 
 function load(text,keep){const ev=parseCSV(text);if(keep&&!ev.length)return;EVENTS=ev;filter="全部";render()}
 load(BUILTIN);
